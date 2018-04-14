@@ -1,0 +1,38 @@
+##################################################
+### Install basic system packages
+- name: Install basic packages
+  apt: name={{ item }} state=present
+  with_items:
+    - vim
+    - git
+    - curl
+    - wget
+    - zip
+    - unzip
+    - htop
+    - iotop
+    - debian-goodies
+    - apt-transport-https
+    - ca-certificates
+    - imagemagick
+
+##################################################
+### Convenience
+- name: Configure inputrc and vimrc for root
+  template: src={{ item.src }} dest={{ item.dest }}
+  with_items:
+   - { src: inputrc, dest: /root/.inputrc }
+   - { src: vimrc, dest: /root/.vimrc }
+   - { src: inputrc, dest: /home/vagrant/.inputrc }
+   - { src: vimrc, dest: /home/vagrant/.vimrc }
+
+##################################################
+### Install and configute ufw firewall
+- name: Set up firewall
+  apt: name=ufw state=present
+
+- name: Allow Port 22
+  ufw: rule=allow port=22
+
+- name: Start the firewall
+  ufw: state=enabled

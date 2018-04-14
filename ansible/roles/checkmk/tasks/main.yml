@@ -1,0 +1,59 @@
+##################################################
+### Install required packages
+- name: Install required packages
+  apt: name={{ item }} state=present
+  with_items:
+    - gdebi-core
+
+##################################################
+### Pre-checks
+- name: Collect python version
+  shell: python --version
+  register: python_version
+
+- name: Check python version
+  assert:
+    that:
+      - "'Python 2' in python_version.stderr"
+    msg: "python must be version 2"
+
+- name: Check if checkmk is installed already
+  shell: dpkg -l | grep check-mk | grep "^ii" | wc -l
+  register: checkmk_installed
+
+##################################################
+### Install check_mk
+- name: Download check_mk
+  get_url:
+    url: "{{ checkmk_url }}"
+    dest: "/tmp/check_mk.deb"
+  when: checkmk_installed.stdout == "0"
+
+- name: Install check_mk
+  shell: gdebi -n /tmp/check_mk.deb
+  become: yes
+  when: checkmk_installed.stdout == "0"
+
+- name: Create project
+  shell: "omd create {{ checkmk_project }} > /tmp/checkmk_project_creation.log"
+  become: yes
+
+- name: Start website
+  shell: "omd start {{ checkmk_project }}"
+  become: yes
+
+- name: Allow Port 80
+  ufw: rule=allow port=80
+
+##################################################
+### Install check_mk agent
+- include_tasks: checkmk_agent.yml
+
+##################################################
+### Credential handling
+- name: Get Web GUI credentials
+  shell: 'cat /tmp/checkmk_project_creation.log | grep password | sed -e "s/.*password: //g"'
+  register: webgui_password
+
+- name: Web GUI credentials
+  debug: msg="User=cmkadmin // Password={{ webgui_password.stdout }}"
