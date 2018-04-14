@@ -45,7 +45,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.hostmanager.include_offline = true
   config.hostmanager.aliases = 'checkmk.test'
   config.vm.hostname = 'checkmk-testing-environment'
-  config.vm.network :private_network, ip: "192.168.56.154"
+  config.vm.network :private_network, ip: "192.168.56.155"
 
   # Run the provisioning
   ## Install Ansible
