@@ -9,12 +9,10 @@
   get_url:
     url: "{{ checkmk_agent_url }}"
     dest: "/tmp/check_mk_agent.deb"
-  when: checkmk_installed.stdout == "0"
 
-- name: Install check_mk
+- name: Install check_mk agent
   shell: gdebi -n /tmp/check_mk_agent.deb
   become: yes
-  when: checkmk_installed.stdout == "0"
 
 - name: Allow Port 6556
   ufw: rule=allow port=6556

@@ -18,7 +18,7 @@
     msg: "python must be version 2"
 
 - name: Check if checkmk is installed already
-  shell: dpkg -l | grep check-mk | grep "^ii" | wc -l
+  shell: dpkg -l | grep check-mk-raw | grep "^ii" | wc -l
   register: checkmk_installed
 
 ##################################################
@@ -34,20 +34,33 @@
   become: yes
   when: checkmk_installed.stdout == "0"
 
-- name: Create project
-  shell: "omd create {{ checkmk_project }} > /tmp/checkmk_project_creation.log"
-  become: yes
-
-- name: Start website
-  shell: "omd start {{ checkmk_project }}"
-  become: yes
-
 - name: Allow Port 80
   ufw: rule=allow port=80
 
 ##################################################
+### Create test project
+- name: Check if checkmk test project is created already
+  shell: "cut -d: -f1 /etc/passwd | grep {{ checkmk_project }} | wc -l"
+  register: checkmk_project_created
+
+- name: Create project
+  shell: "omd create {{ checkmk_project }} > /tmp/checkmk_project_creation.log"
+  become: yes
+  when: checkmk_project_created.stdout == "0"
+
+- name: Start website
+  shell: "omd start {{ checkmk_project }}"
+  become: yes
+  when: checkmk_project_created.stdout == "0"
+
+##################################################
 ### Install check_mk agent
+- name: Check if checkmk agent is installed already
+  shell: dpkg -l | grep check-mk-agent | grep "^ii" | wc -l
+  register: checkmk_agent_installed
+
 - include_tasks: checkmk_agent.yml
+  when: checkmk_agent_installed.stdout == "0"
 
 ##################################################
 ### Credential handling
