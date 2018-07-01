@@ -1,11 +1,11 @@
 #!/bin/bash
-debian_version=`cat /etc/debian_version`
-ansible_installed=`which ansible | wc -l`
+debian_version=$(cat /etc/debian_version)
+ansible_installed=$(which ansible | wc -l)
 
-if [ $ansible_installed -eq 0 ]; then
+if [ "$ansible_installed" -eq 0 ]; then
 
   # Install dirmngr if Debian major version is 9
-  if [[ $debian_version =~ ^9.*$ ]]; then
+  if [[ "$debian_version" =~ ^9.*$ ]]; then
     sudo apt install -y dirmngr
   fi
 
