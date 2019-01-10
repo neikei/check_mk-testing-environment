@@ -1,4 +1,4 @@
-checkmk_version: 1.5.0p10
+checkmk_version: 1.5.0p11
 checkmk_url: "https://mathias-kettner.de/support/{{ checkmk_version }}/check-mk-raw-{{ checkmk_version }}_0.stretch_amd64.deb"
 checkmk_project: test
 checkmk_agent_url: http://checkmk.test/{{ checkmk_project }}/check_mk/agents/check-mk-agent_{{ checkmk_version }}-1_all.deb
