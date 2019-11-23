@@ -1,9 +1,9 @@
 ##################################################
 ### Install check_mk agent
 - name: Install required packages
-  apt: name={{ item }} state=present
-  with_items:
-    - xinetd
+  apt:
+    name: xinetd
+    state: present
 
 - name: Download check_mk agent
   get_url:

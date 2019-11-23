@@ -1,4 +1,4 @@
-" Managed by Ansible
+" {{ ansible_managed }}
 " Color improvement for dark backgrounds
 :color desert
 

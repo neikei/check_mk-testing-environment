@@ -9,11 +9,13 @@
 ##################################################
 ### Update Debian
 - name: Install aptitude and needrestart
-  apt: name={{ item }} state=latest update_cache=yes
+  apt:
+    name:
+      - aptitude
+      - needrestart
+    state: latest
+    update_cache: yes
   check_mode: no
-  with_items:
-    - aptitude
-    - needrestart
 
 - name: Update Debian / aptitude safe-upgrade
   apt:
@@ -33,7 +35,7 @@
     to: recipient@report.test
     subject: 'Info: {{ inventory_hostname }} requires reboot'
     body: 'Please reboot {{ inventory_hostname }}'
-  when: reboot_required.stdout != "1" and vagrantbox.stdout == "0"
+  when: reboot_required.stdout|int != 1 and vagrantbox.stdout|int == 0
 
 #The kernel status (`NEEDRESTART-KSTA`) value has the following meaning:
 #- *0*: unknown or failed to detect
