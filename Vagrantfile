@@ -12,7 +12,7 @@ Vagrant.require_version ">= 2.0.1"
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "debian/stretch64"
+  config.vm.box = "debian/buster64"
 
   config.vm.provider "parallels"
   config.vm.provider "virtualbox"
