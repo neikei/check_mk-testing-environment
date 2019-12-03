@@ -38,7 +38,7 @@
 
 - name: Allow Port 22
   ufw:
-    port: 22
+    port: "22"
     rule: allow
 
 - name: Start the firewall

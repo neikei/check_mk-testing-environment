@@ -11,8 +11,11 @@
     dest: "/tmp/check_mk_agent.deb"
 
 - name: Install check_mk agent
-  shell: gdebi -n /tmp/check_mk_agent.deb
+  apt:
+    deb: "/tmp/check_mk_agent.deb"
   become: yes
 
 - name: Allow Port 6556
-  ufw: rule=allow port=6556
+  ufw:
+    port: "6556"
+    rule: allow

@@ -1,11 +1,4 @@
 ##################################################
-### Install required packages
-- name: Install required packages
-  apt:
-    name: gdebi-core
-    state: present
-
-##################################################
 ### Pre-checks
 - name: Collect python version
   shell: python --version
@@ -15,7 +8,8 @@
   assert:
     that:
       - "'Python 2' in python_version.stderr"
-    msg: "python must be version 2"
+    fail_msg: "python must be version 2"
+    success_msg: "[ok] python version: {{ python_version.stderr }}"
 
 - name: Check if checkmk is installed already
   shell: dpkg -l | grep check-mk-raw | grep "^ii" | wc -l
@@ -30,13 +24,14 @@
   when: checkmk_installed.stdout == "0"
 
 - name: Install check_mk
-  shell: gdebi -n /tmp/check_mk.deb
+  apt:
+    deb: "/tmp/check_mk.deb"
   become: yes
   when: checkmk_installed.stdout == "0"
 
 - name: Allow Port 80
   ufw:
-    port: 80
+    port: "80"
     rule: allow
 
 ##################################################
