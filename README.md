@@ -39,11 +39,11 @@ default                    : ok=21   changed=16   unreachable=0    failed=0
 
 A local Check_MK agent is installed. So, you can start with monitoring "127.0.0.1" to test the functionality.
 
-- Click on "Hosts" in the "WATO - Configuration" section in the left submenu
-- Click on "Create new host".
-- Fill in "Hostname" and set "IPv4 Address" to "127.0.0.1"
-- Click on "Save & Finish"
-- Click on the orange button "1 change" and than on "Activate affected"
+- Click on "Setup" -> "Hosts" -> "Create new host"
+- Fill in "Hostname" in "Basic Settings" and set "IPv4 Address" to "127.0.0.1" in "Network Address"
+- Click on "Save & Go to service configuration"
+- Wait for the "Full Service Scan" and click on "Add missing, remove vanished"
+- Click on the orange button "2 changes" on the top and than "Activate on affected sites"
 
 ## Screenshot
 

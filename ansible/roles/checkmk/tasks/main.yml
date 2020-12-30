@@ -62,7 +62,7 @@
 ##################################################
 ### Credential handling
 - name: Get Web GUI credentials
-  shell: 'cat /tmp/checkmk_project_creation.log | grep password | sed -e "s/.*password: //g"'
+  shell: 'cat /tmp/checkmk_project_creation.log | grep password | sed -e "s/.*password: //g" | head -n1'
   register: webgui_password
 
 - name: Web GUI credentials
