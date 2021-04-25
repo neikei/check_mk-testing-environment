@@ -1,72 +1,72 @@
 ##################################################
 ### Pre-checks
 - name: Collect python version
-  shell: python --version
+  ansible.builtin.shell: python --version
   register: python_version
 
 - name: Check python version
-  assert:
+  ansible.builtin.assert:
     that:
       - "'Python 2' in python_version.stderr"
     fail_msg: "python must be version 2"
     success_msg: "[ok] python version: {{ python_version.stderr }}"
 
 - name: Check if checkmk is installed already
-  shell: dpkg -l | grep check-mk-raw | grep "^ii" | wc -l
+  ansible.builtin.shell: dpkg -l | grep check-mk-raw | grep "^ii" | wc -l
   register: checkmk_installed
 
 ##################################################
 ### Install check_mk
 - name: Download check_mk
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ checkmk_url }}"
     dest: "/tmp/check_mk.deb"
   when: checkmk_installed.stdout == "0"
 
 - name: Install check_mk
-  apt:
+  ansible.builtin.apt:
     deb: "/tmp/check_mk.deb"
   become: yes
   when: checkmk_installed.stdout == "0"
 
 - name: Allow Port 80
-  ufw:
+  community.general.ufw:
     port: "80"
     rule: allow
 
 ##################################################
 ### Create test project
 - name: Check if checkmk test project is created already
-  shell: "cut -d: -f1 /etc/passwd | grep {{ checkmk_project }} | wc -l"
+  ansible.builtin.shell: "cut -d: -f1 /etc/passwd | grep {{ checkmk_project }} | wc -l"
   register: checkmk_project_created
 
 - name: Create project
-  shell: "omd create {{ checkmk_project }} > /tmp/checkmk_project_creation.log"
+  ansible.builtin.shell: "omd create {{ checkmk_project }} > /tmp/checkmk_project_creation.log"
   become: yes
   when: checkmk_project_created.stdout == "0"
 
 - name: Start website
-  shell: "omd start {{ checkmk_project }}"
+  ansible.builtin.shell: "omd start {{ checkmk_project }}"
   become: yes
   when: checkmk_project_created.stdout == "0"
 
 ##################################################
 ### Install check_mk agent
 - name: Check if checkmk agent is installed already
-  shell: dpkg -l | grep check-mk-agent | grep "^ii" | wc -l
+  ansible.builtin.shell: dpkg -l | grep check-mk-agent | grep "^ii" | wc -l
   register: checkmk_agent_installed
 
-- include_tasks: checkmk_agent.yml
+- ansible.builtin.include_tasks: checkmk_agent.yml
   when: checkmk_agent_installed.stdout == "0"
 
 ##################################################
 ### Credential handling
 - name: Get Web GUI credentials
-  shell: 'cat /tmp/checkmk_project_creation.log | grep password | sed -e "s/.*password: //g" | head -n1'
+  ansible.builtin.shell: 'cat /tmp/checkmk_project_creation.log | grep password | sed -e "s/.*password: //g" | head -n1'
   register: webgui_password
 
 - name: Web GUI credentials
-  debug:
+  ansible.builtin.debug:
     msg: >-
       User=cmkadmin
       Password={{ webgui_password.stdout }}

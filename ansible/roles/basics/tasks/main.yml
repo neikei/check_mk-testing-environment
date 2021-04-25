@@ -1,7 +1,7 @@
 ##################################################
 ### Install basic system packages
 - name: "Install basic packages"
-  apt: 
+  ansible.builtin.apt: 
     name:
       - vim
       - git
@@ -20,7 +20,7 @@
 ##################################################
 ### Convenience
 - name: Configure inputrc and vimrc for root
-  template:
+  ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
   with_items:
@@ -32,15 +32,15 @@
 ##################################################
 ### Install and configure ufw firewall
 - name: Set up firewall
-  apt:
+  ansible.builtin.apt:
     name: ufw
     state: present
 
 - name: Allow Port 22
-  ufw:
+  community.general.ufw:
     port: "22"
     rule: allow
 
 - name: Start the firewall
-  ufw:
+  community.general.ufw:
     state: enabled

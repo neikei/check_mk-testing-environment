@@ -1,21 +1,21 @@
 ##################################################
 ### Install check_mk agent
 - name: Install required packages
-  apt:
+  ansible.builtin.apt:
     name: xinetd
     state: present
 
 - name: Download check_mk agent
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ checkmk_agent_url }}"
     dest: "/tmp/check_mk_agent.deb"
 
 - name: Install check_mk agent
-  apt:
+  ansible.builtin.apt:
     deb: "/tmp/check_mk_agent.deb"
   become: yes
 
 - name: Allow Port 6556
-  ufw:
+  community.general.ufw:
     port: "6556"
     rule: allow

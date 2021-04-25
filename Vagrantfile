@@ -57,6 +57,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.playbook = "ansible/playbook.yml"
     ansible.become = true
     ansible.verbose = ""
+    ansible.galaxy_role_file = "ansible/requirements.yml"
   end
 
   # Post-up message
