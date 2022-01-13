@@ -1,4 +1,4 @@
-checkmk_version: 2.0.0p17
+checkmk_version: 2.0.0p18
 checkmk_url: "https://download.checkmk.com/checkmk/{{ checkmk_version }}/check-mk-raw-{{ checkmk_version }}_0.{{ ansible_distribution_release }}_amd64.deb"
 checkmk_project: test
 checkmk_agent_url: http://checkmk.test/{{ checkmk_project }}/check_mk/agents/check-mk-agent_{{ checkmk_version }}-1_all.deb
